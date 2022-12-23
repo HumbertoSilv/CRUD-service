@@ -1,0 +1,41 @@
+service: crud-service
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  environment:
+    NODE_ENV: dev
+
+plugins:
+  # - serverless-esbuild
+  - serverless-plugin-typescript 
+  - serverless-offline
+
+# custom:
+#   esbuild:
+#     bundle: true
+#     minify: false
+#     outputBuildFolder: '.'
+#     # external:
+#     # watch:
+#       # anymatch-compatible definition (https://github.com/es128/anymatch)
+#       # pattern: 'src/**/*.ts' # ['./index.ts', 'src/**/*.ts'] default .
+#       # ignore: .build # ['.serverless/**/*', '.build'] default ['.build', 'dist', 'node_modules']
+
+package:
+  exclude:
+    - config/.env.stg
+    - config/.env.pro
+
+  include:
+    - config/.env.dev
+
+  individually: false
+
+
+functions:
+  api:
+    handler: src/app/server.handler
+    events:
+      - httpApi: '*'
